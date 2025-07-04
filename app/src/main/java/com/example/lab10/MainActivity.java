@@ -146,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button btnFavorite = view.findViewById(R.id.btnFavorite);
 
         String name = marker.getTitle();
-        String address = marker.getTag() != null ? marker.getTag().toString() : "";
         LatLng position = marker.getPosition();
 
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -188,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new Thread(() -> {
                         FavoriteSpot checkAgain = db.favoriteDao().findByNameAndLatLng(name, position.latitude, position.longitude);
                         if (checkAgain == null) {
-                            db.favoriteDao().insert(new FavoriteSpot(name, address, position.latitude, position.longitude));
+                            db.favoriteDao().insert(new FavoriteSpot(name, spotDetail.address, position.latitude, position.longitude));
 
                             runOnUiThread(() -> {
                                 Toast.makeText(this, "已加入收藏", Toast.LENGTH_SHORT).show();
