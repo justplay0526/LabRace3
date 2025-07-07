@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // 設定中心與縮放
         mMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(25.034, 121.545), 13));
+                        new LatLng(25.043, 121.535), 14));
 
         mMap.setOnMarkerClickListener(marker -> {
             showCustomDialog(marker);
@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             intent.putExtra("address", spotDetail.address);
             intent.putExtra("intro", spotDetail.introduction);
             intent.putStringArrayListExtra("images", new ArrayList<>(spotDetail.imageUrls));
+            Log.d("MainActivity", "Opening detail for: " + spotDetail.imageUrls);
             startActivity(intent);
         });
 
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void fetchAttractionsAndAddMarkers() {
         Request request = new Request.Builder()
-                .url("https://www.travel.taipei/open-api/zh-tw/Attractions/All")
+                .url("https://www.travel.taipei/open-api/zh-tw/Attractions/All?nlat=25.043148&elong=121.535816&page=1")
                 .addHeader("accept", "application/json")
                 .build();
 
@@ -237,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (int i = 0; i < Math.min(30, dataArray.length()); i++) {
                         JSONObject item = dataArray.getJSONObject(i);
 
-                        JSONArray fileArray = item.optJSONArray("file");
+                        JSONArray fileArray = item.optJSONArray("images");
                         List<String> imageUrls = new ArrayList<>();
                         if (fileArray != null) {
                             for (int j = 0; j < fileArray.length(); j++) {

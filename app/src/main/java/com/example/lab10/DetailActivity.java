@@ -1,23 +1,18 @@
 package com.example.lab10;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
-    TextView tvName, tvAddress, tvIntro;
+    TextView tvName, tvAddress, tvIntro, tvNoImage;
+    ImageView ivImage;
     ArrayList<String> images;
 
     @Override
@@ -28,6 +23,8 @@ public class DetailActivity extends AppCompatActivity {
         tvName = findViewById(R.id.tvName);
         tvAddress = findViewById(R.id.tvAddress);
         tvIntro = findViewById(R.id.tvIntro);
+        tvNoImage = findViewById(R.id.tvNoImage);
+        ivImage = findViewById(R.id.ivImage);
 
         String name = getIntent().getStringExtra("name");
         String address = getIntent().getStringExtra("address");
@@ -37,5 +34,16 @@ public class DetailActivity extends AppCompatActivity {
         tvName.setText(name);
         tvAddress.setText(address);
         tvIntro.setText(intro);
+        if (images!= null && !images.isEmpty()) {
+            Glide.with(this)
+                    .load(images.get(0)) // 可以是 URL 或本地資源
+                    .into(ivImage);
+        } else {
+            ivImage.setVisibility(ImageView.GONE);
+            tvNoImage.setText("沒有圖片");
+        }
+        findViewById(R.id.btnBack).setOnClickListener(v -> {
+            finish(); // 回上一頁
+        });
     }
 }
