@@ -43,6 +43,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private AppDatabase db;
     private GoogleMap mMap;
+    private final List<Marker> markerList = new ArrayList<>();
     private final OkHttpClient client = new OkHttpClient();
 
     @Override
@@ -77,6 +78,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (mMap != null) {
                 LatLng location = new LatLng(lat, lng);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f));
+
+                for (Marker marker : markerList) {
+                    LatLng pos = marker.getPosition();
+                    if (Math.abs(pos.latitude - location.latitude) < 0.0001 &&
+                            Math.abs(pos.longitude - location.longitude) < 0.0001) {
+
+                        // 找到對應 marker，移動畫面並顯示 title
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 15));
+                        marker.showInfoWindow();
+                        break;
+                    }
+                }
             }
         }
     }
@@ -141,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         View view = getLayoutInflater().inflate(R.layout.custom_dialog, null);
         TextView tvPlaceName = view.findViewById(R.id.tvPlaceName);
         Button btnFavorite = view.findViewById(R.id.btnFavorite);
+        Button btnDetail = view.findViewById(R.id.btnDetail);
 
         String name = marker.getTitle();
         LatLng position = marker.getPosition();
@@ -149,9 +163,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .setView(view)
                 .create();
 
-        Button btnDetail = view.findViewById(R.id.btnDetail);
-
-        // marker.setTag(spotDetail); // 請確認你先前有這樣設資料
         SpotDetail spotDetail = (SpotDetail) marker.getTag();
         if (spotDetail != null) {
             tvPlaceName.setText(String.format("%s\n%s", spotDetail.name, spotDetail.address));
@@ -198,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                     }).start();
                 });
-
                 dialog.show();
             });
         }).start();
@@ -260,10 +270,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 if (marker != null) {
                                     marker.setTag(detail);
                                 }
+                                markerList.add(marker);
                             });
                         }
                     }
-
                 } catch (Exception e) {
                     Log.e("JSON_ERROR", "Parsing failed: " + e.getMessage());
                 }

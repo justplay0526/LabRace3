@@ -23,11 +23,11 @@ public class FavoriteActivity extends AppCompatActivity {
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Toast.makeText(context, "已接收到資料", Toast.LENGTH_SHORT).show();
             // 接收資料後回傳給 MainActivity
             double lat = intent.getDoubleExtra("lat", 0);
             double lng = intent.getDoubleExtra("lng", 0);
             String name = intent.getStringExtra("name");
+            Toast.makeText(context, "已接收到「"+ name +"」的資料", Toast.LENGTH_SHORT).show();
 
             Intent resultIntent = new Intent();
             resultIntent.putExtra("lat", lat);

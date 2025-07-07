@@ -40,7 +40,7 @@ public class DetailActivity extends AppCompatActivity {
                     .into(ivImage);
         } else {
             ivImage.setVisibility(ImageView.GONE);
-            tvNoImage.setText("沒有圖片");
+            tvNoImage.setText("資料來源未提供圖片");
         }
         findViewById(R.id.btnBack).setOnClickListener(v -> {
             finish(); // 回上一頁
