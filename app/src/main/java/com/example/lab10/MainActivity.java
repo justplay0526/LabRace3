@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.Call;
@@ -54,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         else {
             initMap();
             findViewById(R.id.btnToFavorite).setOnClickListener(v -> {
@@ -72,14 +73,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
             double lat = data.getDoubleExtra("lat", 0);
             double lng = data.getDoubleExtra("lng", 0);
-            String name = data.getStringExtra("name");
 
             if (mMap != null) {
                 LatLng location = new LatLng(lat, lng);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 16f));
-                mMap.addMarker(new MarkerOptions()
-                        .position(location)
-                        .title(name));
             }
         }
     }
@@ -116,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // 檢查是否授權定位權限
         if (ActivityCompat.checkSelfPermission(
                 this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(
                         this,
@@ -157,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // marker.setTag(spotDetail); // 請確認你先前有這樣設資料
         SpotDetail spotDetail = (SpotDetail) marker.getTag();
         if (spotDetail != null) {
-            tvPlaceName.setText(spotDetail.name + "\n" + spotDetail.address);
+            tvPlaceName.setText(String.format("%s\n%s", spotDetail.name, spotDetail.address));
         } else {
             // fallback，如果沒資料就用 marker.title
             tvPlaceName.setText(marker.getTitle());
@@ -165,11 +162,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         btnDetail.setOnClickListener(v -> {
             Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra("name", spotDetail.name);
-            intent.putExtra("address", spotDetail.address);
-            intent.putExtra("intro", spotDetail.introduction);
-            intent.putStringArrayListExtra("images", new ArrayList<>(spotDetail.imageUrls));
-            Log.d("MainActivity", "Opening detail for: " + spotDetail.imageUrls);
+            intent.putExtra("name", spotDetail != null ? spotDetail.name : "");
+            intent.putExtra("address", spotDetail != null ? spotDetail.address : "");
+            intent.putExtra("intro", spotDetail != null ? spotDetail.introduction : "");
+            intent.putStringArrayListExtra("images", new ArrayList<>(spotDetail != null ? spotDetail.imageUrls : Collections.emptyList()));
             startActivity(intent);
         });
 
@@ -188,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     new Thread(() -> {
                         FavoriteSpot checkAgain = db.favoriteDao().findByNameAndLatLng(name, position.latitude, position.longitude);
                         if (checkAgain == null) {
-                            db.favoriteDao().insert(new FavoriteSpot(name, spotDetail.address, position.latitude, position.longitude));
+                            db.favoriteDao().insert(new FavoriteSpot(name, spotDetail != null ? spotDetail.address : "", position.latitude, position.longitude));
 
                             runOnUiThread(() -> {
                                 Toast.makeText(this, "已加入收藏", Toast.LENGTH_SHORT).show();

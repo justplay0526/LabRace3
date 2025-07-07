@@ -18,7 +18,6 @@ import java.util.List;
 
 public class FavoriteActivity extends AppCompatActivity {
     private AppDatabase db;
-    private RecyclerView recyclerView;
     private FavoriteAdapter adapter;
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -45,7 +44,7 @@ public class FavoriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
 
-        recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new FavoriteAdapter();
         recyclerView.setAdapter(adapter);

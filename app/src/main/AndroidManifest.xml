@@ -19,10 +19,6 @@
         <service
             android:name=".FavoriteResultService"
             android:enabled="true"
-            android:exported="false"></service>
-
-        <activity
-            android:name=".ImageViewerActivity"
             android:exported="false" />
         <activity
             android:name=".DetailActivity"
