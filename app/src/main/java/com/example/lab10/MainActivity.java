@@ -54,18 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "spot-db").build();
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        else {
-            initMap();
-            findViewById(R.id.btnToFavorite).setOnClickListener(v -> {
-                Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
-                startActivityForResult(intent, 100);
-            });
-        }
+        getPermissionsThenInit();
     }
 
     @Override
@@ -110,6 +99,21 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     initMap();
                 }
             }
+        }
+    }
+
+    private void getPermissionsThenInit() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        else {
+            initMap();
+            findViewById(R.id.btnToFavorite).setOnClickListener(v -> {
+                Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+                startActivityForResult(intent, 100);
+            });
         }
     }
 

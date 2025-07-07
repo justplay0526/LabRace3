@@ -44,10 +44,7 @@ public class FavoriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_favorite);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new FavoriteAdapter();
-        recyclerView.setAdapter(adapter);
+        initRecyclerView();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver,
                 new IntentFilter(FavoriteResultService.ACTION_DONE));
@@ -56,7 +53,30 @@ public class FavoriteActivity extends AppCompatActivity {
                 AppDatabase.class, "spot-db").build();
 
         loadFavorites();
+        setListener();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    private void loadFavorites() {
+        new Thread(() -> {
+            List<FavoriteSpot> spots = db.favoriteDao().getAll();
+            runOnUiThread(() -> adapter.setData(spots));
+        }).start();
+    }
+
+    private void initRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new FavoriteAdapter();
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void setListener() {
         findViewById(R.id.btnBack).setOnClickListener(v -> {
             finish(); // 回上一頁
         });
@@ -82,18 +102,5 @@ public class FavoriteActivity extends AppCompatActivity {
                 }).start())
                 .setNegativeButton("取消", null)
                 .show());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-    }
-
-    private void loadFavorites() {
-        new Thread(() -> {
-            List<FavoriteSpot> spots = db.favoriteDao().getAll();
-            runOnUiThread(() -> adapter.setData(spots));
-        }).start();
     }
 }
