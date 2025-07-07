@@ -1,4 +1,4 @@
-package com.example.lab10;
+package com.example.lab10.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,6 +13,12 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
+
+import com.example.lab10.data.AppDatabase;
+import com.example.lab10.adapter.FavoriteAdapter;
+import com.example.lab10.service.FavoriteResultService;
+import com.example.lab10.data.FavoriteSpot;
+import com.example.lab10.R;
 
 import java.util.List;
 

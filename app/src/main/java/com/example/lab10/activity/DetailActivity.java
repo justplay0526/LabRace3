@@ -1,4 +1,4 @@
-package com.example.lab10;
+package com.example.lab10.activity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.lab10.R;
 
 import java.util.ArrayList;
 

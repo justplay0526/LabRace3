@@ -1,4 +1,4 @@
-package com.example.lab10;
+package com.example.lab10.data;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

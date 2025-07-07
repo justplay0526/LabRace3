@@ -1,4 +1,4 @@
-package com.example.lab10;
+package com.example.lab10.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,6 +18,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.lab10.data.AppDatabase;
+import com.example.lab10.data.FavoriteSpot;
+import com.example.lab10.R;
+import com.example.lab10.data.SpotDetail;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

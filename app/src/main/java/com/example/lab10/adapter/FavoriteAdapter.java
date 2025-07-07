@@ -1,4 +1,4 @@
-package com.example.lab10;
+package com.example.lab10.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.lab10.data.FavoriteSpot;
+import com.example.lab10.R;
 
 import java.util.ArrayList;
 import java.util.List;

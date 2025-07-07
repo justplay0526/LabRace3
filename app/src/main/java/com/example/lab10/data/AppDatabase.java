@@ -1,4 +1,4 @@
-package com.example.lab10;
+package com.example.lab10.data;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;

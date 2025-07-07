@@ -1,4 +1,4 @@
-package com.example.lab10;
+package com.example.lab10.service;
 
 import android.app.IntentService;
 import android.content.Intent;
