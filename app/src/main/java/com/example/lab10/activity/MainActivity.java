@@ -13,15 +13,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lab10.data.AppDatabase;
 import com.example.lab10.data.FavoriteSpot;
 import com.example.lab10.R;
 import com.example.lab10.data.SpotDetail;
+import com.example.lab10.databinding.ActivityMainBinding;
+import com.example.lab10.databinding.CustomDialogBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +44,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+    private ActivityMainBinding binding;
     private AppDatabase db;
     private GoogleMap mMap;
     private final List<Marker> markerList = new ArrayList<>();
@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "spot-db").build();
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         else {
             initMap();
-            findViewById(R.id.btnToFavorite).setOnClickListener(v -> {
+            binding.btnToFavorite.setOnClickListener(v -> {
                 Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
                 startActivityForResult(intent, 100);
             });
@@ -159,27 +160,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void showCustomDialog(Marker marker) {
-        View view = getLayoutInflater().inflate(R.layout.custom_dialog, null);
-        TextView tvPlaceName = view.findViewById(R.id.tvPlaceName);
-        Button btnFavorite = view.findViewById(R.id.btnFavorite);
-        Button btnDetail = view.findViewById(R.id.btnDetail);
+        CustomDialogBinding dialogBinding = CustomDialogBinding.inflate(getLayoutInflater());
 
         String name = marker.getTitle();
         LatLng position = marker.getPosition();
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(view)
+                .setView(dialogBinding.getRoot())
                 .create();
 
         SpotDetail spotDetail = (SpotDetail) marker.getTag();
         if (spotDetail != null) {
-            tvPlaceName.setText(String.format("%s\n%s", spotDetail.name, spotDetail.address));
+            dialogBinding.tvPlaceName.setText(String.format("%s\n%s", spotDetail.name, spotDetail.address));
         } else {
             // fallback，如果沒資料就用 marker.title
-            tvPlaceName.setText(marker.getTitle());
+            dialogBinding.tvPlaceName.setText(marker.getTitle());
         }
 
-        btnDetail.setOnClickListener(v -> {
+        dialogBinding.btnDetail.setOnClickListener(v -> {
             Intent intent = new Intent(this, DetailActivity.class);
             intent.putExtra("name", spotDetail != null ? spotDetail.name : "");
             intent.putExtra("address", spotDetail != null ? spotDetail.address : "");
@@ -194,11 +192,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             runOnUiThread(() -> {
                 if (existing != null) {
-                    btnFavorite.setText("已收藏");
-                    btnFavorite.setEnabled(false);
+                    dialogBinding.btnFavorite.setText("已收藏");
+                    dialogBinding.btnFavorite.setEnabled(false);
                 }
 
-                btnFavorite.setOnClickListener(v -> {
+                dialogBinding.btnFavorite.setOnClickListener(v -> {
                     // 再次防呆確認（避免 race condition）
                     new Thread(() -> {
                         FavoriteSpot checkAgain = db.favoriteDao().findByNameAndLatLng(name, position.latitude, position.longitude);

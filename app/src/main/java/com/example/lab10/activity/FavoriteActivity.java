@@ -11,18 +11,18 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import com.example.lab10.data.AppDatabase;
 import com.example.lab10.adapter.FavoriteAdapter;
+import com.example.lab10.databinding.ActivityFavoriteBinding;
 import com.example.lab10.service.FavoriteResultService;
 import com.example.lab10.data.FavoriteSpot;
-import com.example.lab10.R;
 
 import java.util.List;
 
 public class FavoriteActivity extends AppCompatActivity {
+    private ActivityFavoriteBinding binding;
     private AppDatabase db;
     private FavoriteAdapter adapter;
 
@@ -48,7 +48,8 @@ public class FavoriteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite);
+        binding = ActivityFavoriteBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         initRecyclerView();
 
@@ -76,14 +77,13 @@ public class FavoriteActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new FavoriteAdapter();
-        recyclerView.setAdapter(adapter);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerView.setAdapter(adapter);
     }
 
     private void setListener() {
-        findViewById(R.id.btnBack).setOnClickListener(v -> {
+        binding.btnBack.setOnClickListener(v -> {
             finish(); // 回上一頁
         });
 

@@ -4,16 +4,20 @@ plugins {
 
 android {
     namespace = "com.example.lab10"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.lab10"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     buildTypes {
@@ -26,8 +30,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
@@ -44,8 +48,6 @@ dependencies {
     annotationProcessor(libs.room.compiler)
     implementation(libs.glide)
     annotationProcessor (libs.glide.compiler)
-
-
     implementation(libs.maps)
     implementation(libs.okhttp)
 }
