@@ -4,10 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.room.Room;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +25,7 @@ import com.example.lab10.R;
 import com.example.lab10.data.SpotDetail;
 import com.example.lab10.databinding.ActivityMainBinding;
 import com.example.lab10.databinding.CustomDialogBinding;
+import com.example.lab10.service.FavoriteResultService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -50,24 +55,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final List<Marker> markerList = new ArrayList<>();
     private final OkHttpClient client = new OkHttpClient();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "spot-db").build();
-
-        getPermissionsThenInit();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
-            double lat = data.getDoubleExtra("lat", 0);
-            double lng = data.getDoubleExtra("lng", 0);
+    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            double lat = intent.getDoubleExtra("lat", 0);
+            double lng = intent.getDoubleExtra("lng", 0);
+            String name = intent.getStringExtra("name");
+            Toast.makeText(context, "已接收到「"+ name +"」的資料", Toast.LENGTH_SHORT).show();
 
             if (mMap != null) {
                 LatLng location = new LatLng(lat, lng);
@@ -86,6 +80,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         }
+    };
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "spot-db").build();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver,
+                new IntentFilter(FavoriteResultService.ACTION_DONE));
+
+        getPermissionsThenInit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
 
