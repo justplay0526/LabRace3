@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="12dp"
     android:layout_width="match_parent"
@@ -11,12 +12,14 @@
         android:textStyle="bold"
         android:textSize="18sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:text="三創生活"/>
 
     <TextView
         android:id="@+id/tvAddress"
         android:textColor="#666666"
         android:textSize="14sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:text="100 臺北市中正區市民大道三段2號"/>
 </LinearLayout>
