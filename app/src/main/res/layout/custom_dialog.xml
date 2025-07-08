@@ -3,11 +3,13 @@
     android:padding="24dp"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#f3ebe4">
 
     <TextView
         android:id="@+id/tvPlaceName"
         android:text="景點名稱"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_width="match_parent"

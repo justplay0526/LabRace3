@@ -5,11 +5,12 @@
     android:padding="16dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="#f3ebe4">
 
     <TextView
         android:id="@+id/tvTitle"
         android:text="收藏景點"
+        android:textColor="#4a8fe1"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_width="match_parent"
@@ -27,6 +28,7 @@
     <Button
         android:id="@+id/btnBack"
         android:text="返回地圖"
+        android:textSize="12sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
